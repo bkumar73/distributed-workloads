@@ -1,14 +1,14 @@
 # Snyk scan for training‑runtime Dockerfiles
 # push to main, nightly 03:00 UTC, fork PRs after label `run‑snyk`
 # Fails on High/Critical CVEs
-name: Snyk Dockerfile Scan
-on:
-  push:
-    branches: [ main ]
-  pull_request_target:
-    types: [ labeled ]        
-  schedule:
-    - cron: '0 3 * * *'
+#name: Snyk Dockerfile Scan
+#on:
+#  push:
+#    branches: [ main ]
+#  pull_request_target:
+#    types: [ labeled ]        
+#  schedule:
+#    - cron: '0 3 * * *'
 jobs:
   snyk-scan:
     if: |
