@@ -6,6 +6,12 @@ ENV KUBECONFIG=/distributed-workloads/tests/.kube/config
 # Set the working directory inside the container
 WORKDIR /distributed-workloads
 
+# Download the latest OpenShift CLI binary
+RUN wget -q https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.18/openshift-client-linux.tar.gz -P oc-client && \
+    tar -xf oc-client/openshift-client-linux.tar.gz -C oc-client && \
+    cp oc-client/oc /usr/local/bin && \
+    rm -rf oc-client/
+
 # Copy the go mod and sum files
 COPY go.mod go.sum ./
 
@@ -18,9 +24,9 @@ WORKDIR /distributed-workloads/tests
 # Copy the source from the current directory to the working directory inside the container
 COPY tests/ .
 
-# Command to run the tests
-ENTRYPOINT [ "gotestsum"]
+# Copy the .env-odh file and the run-test.sh script to the working directory inside the container
+COPY images/tests/.env-odh .env-odh
+COPY images/tests/run-test.sh .
 
-# Configure images using environment variables
-ENV FMS_HF_TUNING_IMAGE=quay.io/modh/fms-hf-tuning:release
-ENV NOTEBOOK_IMAGE=quay.io/modh/odh-generic-data-science-notebook:v3-20250519
+# Command to run the tests
+ENTRYPOINT ["bash", "run-test.sh"]
